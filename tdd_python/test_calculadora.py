@@ -80,23 +80,40 @@ class Testfuncionario(unittest.TestCase):
         self.assertIsInstance(self.f1.cargo, str)
         self.assertIsInstance(self.f2.cargo, str)
   
-  def test_calcula_salario_dev(self):
+  def test_calcula_desconto_dev(self):
+    self.assertEqual(Funcionario.calculaDesconto(self.f1.cargo, self.f1.salariobase), 640.00)
+    self.assertEqual(Funcionario.calculaDesconto(self.dev1.cargo, self.dev1.salariobase), 200.00)
+
+  def test_calcula_desconto_dba(self):
+    self.assertEqual(Funcionario.calculaDesconto(self.f2.cargo, self.f2.salariobase), 640.10)
+    self.assertEqual(Funcionario.calculaDesconto(self.dba2.cargo, self.dba2.salariobase), 400.10)
+
+  def test_calcula_desconto_testador(self):
+    self.assertEqual(Funcionario.calculaDesconto(self.test1.cargo, self.test1.salariobase), 640.10)
+    self.assertEqual(Funcionario.calculaDesconto(self.test2.cargo, self.test2.salariobase), 400.10)
+
+  def test_calcula_desconto_gerente(self):
+    self.assertEqual(Funcionario.calculaDesconto(self.gerente1.cargo, self.gerente1.salariobase), 1040.1000000000001)
+    self.assertEqual(Funcionario.calculaDesconto(self.gerente2.cargo, self.gerente2.salariobase), 400.05)
+
+
+  def test_calcula_salarioLiquido_dev(self):
     self.assertEqual(Funcionario.calculaSalario(self.f1.cargo, self.f1.salariobase), 2560)
     self.assertEqual(Funcionario.calculaSalario(self.dev1.cargo, self.dev1.salariobase), 1800.00)
 
-  def test_calcula_salario_dba(self):
+  def test_calcula_salarioLiquido_dba(self):
     self.assertEqual(Funcionario.calculaSalario(self.f2.cargo, self.f2.salariobase), 2560.40)
     self.assertEqual(Funcionario.calculaSalario(self.dba2.cargo, self.dba2.salariobase), 1600.40)
 
-  def test_calcula_salario_testador(self):
+  def test_calcula_salarioLiquido_testador(self):
     self.assertEqual(Funcionario.calculaSalario(self.test1.cargo, self.test1.salariobase), 2560.40)
     self.assertEqual(Funcionario.calculaSalario(self.test2.cargo, self.test2.salariobase), 1600.40)
 
-  def test_calcula_salario_gerente(self):
+  def test_calcula_salarioLiquido_gerente(self):
     self.assertEqual(Funcionario.calculaSalario(self.gerente1.cargo, self.gerente1.salariobase), 4160.40)
     self.assertEqual(Funcionario.calculaSalario(self.gerente2.cargo, self.gerente2.salariobase), 3600.45)
 
-  def test_calcula_salario_nao_listado(self):
+  def test_calcula_salarioLiquido_nao_listado(self):
     self.assertEqual(Funcionario.calculaSalario(self.rh.cargo, self.rh.salariobase), 'Funcionario não listado')
     self.assertEqual(Funcionario.calculaSalario(self.cto.cargo, self.cto.salariobase), 'Funcionario não listado')
 
