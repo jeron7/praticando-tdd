@@ -2,6 +2,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -12,15 +15,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @DisplayName("Test InvoiceFilter class")
 public class InvoiceFilterTest {
 
-    static final List<Invoice> EMPTY_LIST = Collections.emptyList();
-
     @Test
     @DisplayName("When invoices list is empty, should return empty list")
     void filterEmptyList() {
         List<Invoice> emptyList = Collections.emptyList();
 
         assertThat(InvoiceFilter.doFilter(emptyList))
-                .isEqualTo(EMPTY_LIST);
+                .isEqualTo(Collections.EMPTY_LIST);
     }
 
     @Nested
@@ -34,7 +35,7 @@ public class InvoiceFilterTest {
             List<Invoice> oneInvoice = Collections.singletonList(invoice);
 
             assertThat(InvoiceFilter.doFilter(oneInvoice))
-                    .isEqualTo(EMPTY_LIST);
+                    .isEqualTo(Collections.EMPTY_LIST);
         }
 
         @Test
@@ -57,12 +58,44 @@ public class InvoiceFilterTest {
         @Test
         @DisplayName("And invoice date is from last month, should return empty")
         void filterListWithOneInvoice() {
-            Invoice invoice = new Invoice(1, 2000.0, new Date(), new Client());
+            Date lastMonth = InvoiceFilter.getLastMonthFromToday();
+
+            Invoice invoice = new Invoice(1, 2000.0, lastMonth, new Client());
             List<Invoice> oneInvoice = Collections.singletonList(invoice);
 
             assertThat(InvoiceFilter.doFilter(oneInvoice))
-                    .isEqualTo(EMPTY_LIST);
+                    .isEqualTo(Collections.EMPTY_LIST);
         }
 
+        @Test
+        @DisplayName("And have a invoice date is from last year, should not filtered invoices")
+        void filterListWithMoreThanOneInvoice() {
+            LocalDateTime localDateTime = LocalDateTime.parse("2021/10/29 12:00:00", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+            Date lastYearDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+            Invoice invoice1 = new Invoice(1, 2000.0, lastYearDate, new Client());
+            Invoice notFiltered1 = new Invoice(2, 2000.0, new Date(), new Client());
+            Invoice notFiltered2 = new Invoice(3, 2500.0, new Date(), new Client());
+            List<Invoice> oneInvoice = Arrays.asList(invoice1, notFiltered1, notFiltered2);
+
+            assertThat(InvoiceFilter.doFilter(oneInvoice))
+                    .isEqualTo(Arrays.asList(notFiltered1, notFiltered2));
+        }
+    }
+
+    @Nested
+    @DisplayName("When invoices list have a invoice with value between 2500 and 3000")
+    class WhenHaveInvoiceWithValueBetween2500And3000 {
+        @Test
+        @DisplayName("And invoice client date inclusion is from last month, should return the invoice in the list")
+        void filterListWithOneInvoice() {
+            Date lastMonth = InvoiceFilter.getLastMonthFromToday();
+
+            Invoice invoice = new Invoice(1, 2499.0, lastMonth, new Client());
+            List<Invoice> oneInvoice = Collections.singletonList(invoice);
+
+            assertThat(InvoiceFilter.doFilter(oneInvoice))
+                    .isEqualTo(oneInvoice);
+        }
     }
 }
