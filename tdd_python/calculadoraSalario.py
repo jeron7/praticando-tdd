@@ -1,2 +1,11 @@
-def salario_int_or_float(n):
-  assert isinstance(n, (int, float)), 'n deve ser int ou float'
+class Funcionario:
+  def __init__(self, nome, sobrenome, email, salariobase, cargo):
+    self.nome = nome
+    self.sobrenome = sobrenome
+    self.email = email
+    self.salariobase = salariobase
+    self.cargo = cargo
+
+
+
+  
