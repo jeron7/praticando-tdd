@@ -12,6 +12,4 @@ public class Invoice {
     private double value;
 
     private Date date;
-
-    private Client client;
 }
