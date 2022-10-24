@@ -2,7 +2,7 @@
 
 Este repositório foi criado para resolver o segundo exercício da disciplina de **Verificação e validação de software** da **UFCG**. Foi pedido que os programas implementados para duas especificações escolhidas pelo grupo, utilizem o método ágil TDD (Test Driven-development) para guiar a implementação.
 
-## Especificações escolhidos
+## Especificações escolhidas
 1. Calculadora de Salário foi implementada por Adísio Fialho
 2. Filtro de Faturas foi implementado por Jerônimo Jairo
 
